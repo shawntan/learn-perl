@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use LWP::UserAgent;
+use Data::Dumper;
+use Getopt::Long;
+use JSON::XS;
+use URI::URL;
+require Encode;
+use Encode qw( encode decode );
+
+binmode STDOUT, ":utf8";
+binmode STDIN, ":utf8";
+binmode STDERR, ":utf8";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(10);
+$ua->env_proxy;
+
+my $response = $ua->get('http://news.ycombinator.com');
+
+if ($response->is_success) {
+	my @matches = ( $response->decoded_content =~ /href\s*=\s*"([^"]*)"/g );
+	foreach (@matches) {
+		print url($_,$response->base)->abs->as_string,"\n"
+	}
+
+} else {
+	die $response->status_line;
+}
+
