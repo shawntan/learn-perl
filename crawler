@@ -31,6 +31,7 @@ while(@q) {
 			my $link = url($_,$response->base)->abs->as_string;
 			if($seen->insert($link)) {
 				#print $link,"\n";
+				print Dumper @q;
 				unshift(@q,$link);
 			}
 		}
